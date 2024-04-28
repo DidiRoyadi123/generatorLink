@@ -1,3 +1,25 @@
+<?php
+// Memulai session
+session_start();
+
+// Memeriksa apakah pengguna sudah login
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Pengguna belum login, arahkan ke halaman login
+    header('Location: login.php');
+    exit;
+}
+
+// Menangani logout
+if(isset($_GET["logout"]) && $_GET["logout"] == 1) {
+    // Hapus semua data sesi
+    session_unset();
+    // Hancurkan sesi
+    session_destroy();
+    // Redirect ke halaman login
+    header("Location: login.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +31,28 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f1f1f1;
+        }
+
+        .sticky-menu {
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .sticky-menu a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .sticky-menu a.active {
+            background-color: #555;
         }
 
         .container {
@@ -97,6 +141,12 @@
     </style>
 </head>
 <body>
+    <div class="sticky-menu">
+        <a id="home" href="index.php">Home</a>
+        <a id="list" href="list.php">List</a>
+        <a id="logout" href="?logout=1">Logout</a>
+    </div>
+    <br> <br> <br>
     <div class="container">
         <h1>Link Generator</h1>
         <form id="linkForm" action="generate.php" method="post">

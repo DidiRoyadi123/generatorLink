@@ -1,3 +1,45 @@
+<?php
+// Memulai session
+session_start();
+
+// Memeriksa apakah pengguna sudah login
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Pengguna belum login, arahkan ke halaman login
+    header('Location: login.php');
+    exit;
+}
+
+// Menangani logout
+if(isset($_GET["logout"]) && $_GET["logout"] == 1) {
+    // Hapus semua data sesi
+    session_unset();
+    // Hancurkan sesi
+    session_destroy();
+    // Redirect ke halaman login
+    header("Location: login.php");
+    exit;
+}
+
+function deleteAllFiles($folderPath) {
+    $files = glob($folderPath . '*'); // get all file names
+    foreach($files as $file) { // iterate files
+        if(is_file($file)) {
+            unlink($file); // delete file
+        }
+    }
+}
+
+if(isset($_POST['delete_all'])) {
+    $confirmation = $_POST['confirmation'];
+    if($confirmation == 'yes') {
+        deleteAllFiles('view/');
+        echo "<script>alert('All files deleted successfully.')</script>";
+    } else {
+        echo "<script>alert('Delete all operation cancelled.')</script>";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +47,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List of Generated Files</title>
     <style>
-        body {
+        /* Reset CSS */
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
+            padding: 0;
+            box-sizing: border-box;
         }
 
+        /* Body Style */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin-top: 60px; /* Untuk menyembunyikan menu sticky */
+        }
+
+        /* Sticky Menu Style */
         .sticky-menu {
             background-color: #333;
             overflow: hidden;
@@ -32,6 +84,75 @@
             background-color: #555;
         }
 
+        /* Content Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* Table Style */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Delete All Button Style */
+        .delete-all-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease; /* Animasi perubahan warna latar belakang */
+        }
+
+        /* Hover Effect for Delete All Button */
+        .delete-all-button:hover {
+            background-color: #b30000;
+        }
+
+        /* Copy Button Style */
+        .copy-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Hover Effect for Copy Button */
+        .copy-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Pagination Style */
         ul.pagination {
             display: inline-block;
             padding: 0;
@@ -55,19 +176,6 @@
         }
 
         ul.pagination li a:hover:not(.active) {background-color: #ddd;}
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
         .delete-button {
             background-color: red;
             color: white;
@@ -75,134 +183,100 @@
             padding: 5px 10px;
             text-align: center;
             text-decoration: none;
-            display: inline-block;
             font-size: 16px;
             cursor: pointer;
         }
-        .copy-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .excel-button {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin-top: 20px;
-            cursor: pointer;
-            margin-bottom: 20px;
+
+        .delete-button:hover {
+            background-color: #b30000;
         }
     </style>
 </head>
 <body>
+    <!-- Sticky Menu -->
     <div class="sticky-menu">
         <a id="home" href="index.php">Home</a>
         <a id="list" class="active" href="list.php">List</a>
+        <a id="logout" href="?logout=1">Logout</a>
     </div>
-    <br> <br> <br>
-    <h1>List of Generated Files</h1>
- <!-- Delete All Button -->
- <?php
-    function deleteAllFiles($folderPath) {
-        $files = glob($folderPath . '*'); // get all file names
-        foreach($files as $file) { // iterate files
-            if(is_file($file)) {
-                unlink($file); // delete file
-            }
-        }
-    }
 
-    if(isset($_POST['delete_all'])) {
-        $confirmation = $_POST['confirmation'];
-        if($confirmation == 'yes') {
-            deleteAllFiles('view/');
-            echo "<script>alert('All files deleted successfully.')</script>";
-        } else {
-            echo "<script>alert('Delete all operation cancelled.')</script>";
-        }
-    }
-    ?>
+    <!-- Content Container -->
+    <div class="container">
+        <h1>List of Generated Files</h1>
 
-    <form action="" method="post" onsubmit="return confirm('Are you sure you want to delete all files?');">
-        <input type="hidden" name="confirmation" value="yes">
-        <input type="submit" name="delete_all" value="Delete All">
-    </form>
-    <table>
-        <tr>
-            <th>Nomor</th>
-            <th>Copy Link</th>
-            <th>Link</th>
-            <th>Delete</th>
-        </tr>
-        <?php
-        // Menampilkan daftar file dengan nomor, nama file, link, tombol delete, dan tombol copy link
-        $viewFolder = 'view/';
-        $filesPerPage = 20;
-        $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-        $start = ($currentPage - 1) * $filesPerPage;
-        if (is_dir($viewFolder)) {
-            $files = array_diff(scandir($viewFolder), array('..', '.'));
-            // Mengurutkan daftar file berdasarkan waktu pembuatan (descending order)
-            usort($files, function($a, $b) use ($viewFolder) {
-                return filemtime($viewFolder . $b) - filemtime($viewFolder . $a);
-            });
-            $totalFiles = count($files);
-            $totalPages = ceil($totalFiles / $filesPerPage);
+        <!-- Delete All Button -->
+        <form action="" method="post" onsubmit="return confirm('Are you sure you want to delete all files?');">
+            <input type="hidden" name="confirmation" value="yes">
+            <input type="submit" name="delete_all" class="delete-all-button" value="Delete All">
+        </form>
 
-            $files = array_slice($files, $start, $filesPerPage);
-            $count = $start + 1;
-            foreach ($files as $file) {
-                if ($file !== '.htaccess') {
-                    $link = 'http' . (($_SERVER['SERVER_PORT'] == 443) ? 's://' : '://') . $_SERVER['HTTP_HOST'] . '/' . $viewFolder . $file;
-                    $fileName = basename($file); // Dapatkan hanya nama file dari path
-                    $linkPath = substr($link, strpos($link, 'view/') + strlen('view/')); // Ambil bagian link setelah 'view/'
-                    echo "<tr>";
-                    echo "<td>$count</td>";
-                    // Tombol copy link
-                    echo "<td><button class='copy-button' data-link='$link'>Copy Link</button></td>";
-                    echo "<td><a href='$link'>$fileName</a></td>";
-                    // Formulir delete
-                    echo "<td>";
-                    echo "<form action='delete.php' method='post'>";
-                    echo "<input type='hidden' name='filename' value='$file'>";
-                    echo "<input type='hidden' name='link' value='$linkPath'>"; // Mengirim bagian link setelah 'view/' ke delete.php
-                    echo "<button class='delete-button' type='submit'>Delete</button>";
-                    echo "</form>";
-                    echo "</td>";
-                    echo "</tr>";
-                    $count++;
+        <!-- File List Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nomor</th>
+                    <th>Copy Link</th>
+                    <th>Link</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Menampilkan daftar file dengan nomor, nama file, link, tombol delete, dan tombol copy link
+                $viewFolder = 'view/';
+                $filesPerPage = 20;
+                $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+                $start = ($currentPage - 1) * $filesPerPage;
+                if (is_dir($viewFolder)) {
+                    $files = array_diff(scandir($viewFolder), array('..', '.'));
+                    // Mengurutkan daftar file berdasarkan waktu pembuatan (descending order)
+                    usort($files, function($a, $b) use ($viewFolder) {
+                        return filemtime($viewFolder . $b) - filemtime($viewFolder . $a);
+                    });
+                    $totalFiles = count($files);
+                    $totalPages = ceil($totalFiles / $filesPerPage);
+
+                    $files = array_slice($files, $start, $filesPerPage);
+                    $count = $start + 1;
+                    foreach ($files as $file) {
+                        if ($file !== '.htaccess') {
+                            $link = 'http' . (($_SERVER['SERVER_PORT'] == 443) ? 's://' : '://') . $_SERVER['HTTP_HOST'] . '/' . $viewFolder . $file;
+                            $fileName = basename($file); // Dapatkan hanya nama file dari path
+                            $linkPath = substr($link, strpos($link, 'view/') + strlen('view/')); // Ambil bagian link setelah 'view/'
+                            echo "<tr>";
+                            echo "<td>$count</td>";
+                            // Tombol copy link
+                            echo "<td><button class='copy-button' data-link='$link'>Copy Link</button></td>";
+                            echo "<td><a href='$link'>$fileName</a></td>";
+                            // Formulir delete
+                            echo "<td>";
+                            echo "<form action='delete.php' method='post'>";
+                            echo "<input type='hidden' name='filename' value='$file'>";
+                            echo "<input type='hidden' name='link' value='$linkPath'>"; // Mengirim bagian link setelah 'view/' ke delete.php
+                            echo "<button class='delete-button' type='submit'>Delete</button>";
+                            echo "</form>";
+                            echo "</td>";
+                            echo "</tr>";
+                            $count++;
+                        }
+                    }
                 }
-            }
-        }
-        ?>
-    </table>
-    <!-- Pagination -->
-    <ul class="pagination">
-        <?php for($i = 1; $i <= $totalPages; $i++): ?>
-            <li <?php if($i == $currentPage) echo 'class="active"'; ?>>
-                <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-            </li>
-        <?php endfor; ?>
-    </ul>
+                ?>
+            </tbody>
+        </table>
 
-    <!-- Form untuk menyimpan daftar file ke Excel -->
-    <!-- <form action="save_to_excel.php" method="post">
-        <input class="excel-button" type="submit" name="save_to_excel" value="Save to Excel">
-    </form> -->
+        <!-- Pagination -->
+        <ul class="pagination">
+            <?php for($i = 1; $i <= $totalPages; $i++): ?>
+                <li <?php if($i == $currentPage) echo 'class="active"'; ?>>
+                    <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+            <?php endfor; ?>
+        </ul>
+    </div>
 
+    <!-- JavaScript untuk menyalin link saat tombol copy diklik -->
     <script>
-        // JavaScript untuk menyalin link saat tombol copy diklik
         const copyButtons = document.querySelectorAll('.copy-button');
         copyButtons.forEach(button => {
             button.addEventListener('click', () => {

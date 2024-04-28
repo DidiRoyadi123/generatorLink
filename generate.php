@@ -3,9 +3,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $links = explode("\n", $_POST['links']);
 
     foreach ($links as $link) {
-        // Memeriksa apakah link mengandung kata 'neocloud.co.in/shared'
-        if (strpos($link, 'neocloud.co.in/shared') === false) {
-            // Jika tidak, tampilkan pesan kesalahan dan kembali ke index.php
+       
+        if (strpos($link, 'neocloud.co.in/shared') === false && strpos($link, 'https://wave-cloud.s3.ap-south-1.amazonaws.com/neocloud/') === false) {
+            // Jika tidak ada yang memenuhi kondisi, tampilkan pesan kesalahan
             echo "<script>alert('Link tidak valid. Harap masukkan link yang valid.'); window.location.href = 'index.php';</script>";
             exit;
         }
@@ -24,6 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 '        .ad-banner { background-color: #f1f1f1; text-align: center; padding: 10px; }' .
                 '        iframe { width: 100%; min-height: 100vh; border: none; display: none; }' . // Menyembunyikan iframe secara default
                 '        .button-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999; }' . // Menempatkan tombol di tengah iframe
+                // hoover effect
+                '        .tampilkan-button:hover { background-color: #003366; }' .
                 '        .tampilkan-button { background-color: blue; color: white; padding: 10px 20px; border: none; cursor: pointer; }' . // Mengubah gaya tombol tampilkan
                 '    </style>' .
                 '</head>' .
@@ -42,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 '        button.disabled = true;' . // Menonaktifkan tombol saat hitungan mundur berlangsung
                 '        timer = setInterval(function() {' .
                 '            counter--;' .
-                '            button.innerHTML = "tonton Video (" + counter + "s)";' .
+                '            button.innerHTML = "Tunggu/Wait (" + counter + "s)";' .
                 '            if (counter < 0) {' .
                 '                clearInterval(timer);' .
                 '                button.innerHTML = "Video ada dibawah";' .
@@ -52,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 '        }, 1000);' .
                 '    }' .
                 '</script>' .
-                '<div class="button-container"><button id="tampilkanButton" class="tampilkan-button" onclick="countdown()">Tampilkan (15s)</button></div>' . // Menambahkan tombol tampilkan dengan event onclick yang memanggil fungsi countdown
+                '<div class="button-container"><button id="tampilkanButton" class="tampilkan-button" onclick="countdown()">Tonton/Watch (15s)</button></div>' . // Menambahkan tombol tampilkan dengan event onclick yang memanggil fungsi countdown
                 '<script src="https://codeflareblogspot.github.io/code/KillAdBlock.js"></script>' .
                 '<script>' .
                 '    var titleAd = "AD Blocker Detected";' .

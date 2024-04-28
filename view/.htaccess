@@ -1,0 +1,5 @@
+Options -Indexes
+
+# Redirect .html files to /
+RewriteCond %{REQUEST_URI} \.html$ [NC]
+RewriteRule ^ / [R=301,L]

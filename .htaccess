@@ -1,0 +1,7 @@
+# Redirect /link.php to /
+RewriteCond %{REQUEST_URI} ^/list\.php$ [NC]
+RewriteRule ^ / [R=301,L]
+
+# Redirect .html files to /
+RewriteCond %{REQUEST_URI} \.html$ [NC]
+RewriteRule ^ / [R=301,L]

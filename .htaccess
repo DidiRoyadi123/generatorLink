@@ -5,3 +5,7 @@ RewriteRule ^ / [R=301,L]
 # Redirect .html files to /
 RewriteCond %{REQUEST_URI} \.html$ [NC]
 RewriteRule ^ / [R=301,L]
+# paksa user akses https
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+Options -Indexes

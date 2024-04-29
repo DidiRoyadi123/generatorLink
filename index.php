@@ -1,6 +1,9 @@
 <?php
-// Memulai session
+// Mulai sesi
 session_start();
+
+// Tentukan waktu timeout untuk session (15 menit)
+$session_timeout = 900; // 15 menit dalam detik
 
 // Memeriksa apakah pengguna sudah login
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -9,8 +12,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-// Menangani logout
-if(isset($_GET["logout"]) && $_GET["logout"] == 1) {
+// Menangani logout jika pengguna melakukan logout secara manual
+if (isset($_GET["logout"]) && $_GET["logout"] == 1) {
     // Hapus semua data sesi
     session_unset();
     // Hancurkan sesi
@@ -19,6 +22,19 @@ if(isset($_GET["logout"]) && $_GET["logout"] == 1) {
     header("Location: login.php");
     exit;
 }
+
+// Periksa apakah sudah melewati waktu timeout
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $session_timeout)) {
+    // Jika sudah melewati waktu timeout, hapus semua data sesi dan arahkan ke halaman logout
+    session_unset();
+    session_destroy();
+    header("Location: login.php?timeout=1"); // Anda bisa menambahkan parameter timeout jika ingin menampilkan pesan khusus
+    exit;
+}
+
+// Update waktu aktivitas terakhir pengguna
+$_SESSION['last_activity'] = time();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

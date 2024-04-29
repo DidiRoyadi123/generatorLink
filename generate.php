@@ -11,7 +11,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if (!empty($link)) {
-            $fileName = generateRandomString(10) . '.html';
+            $randomString = generateRandomString(10);
+            $timestamp = time();
+            $formattedDate = date('dmY', $timestamp);
+            $formattedDate = implode("-", str_split($formattedDate, 4)); // Memisahkan tanggal-bulan-tahun-jam-menit dengan tanda "-"
+            $fileName = $formattedDate . '_' . $randomString . '.html';
             $filePath = 'view/' . $fileName;
             $iframeCode = '<!DOCTYPE html>' .
                 '<html lang="en">' .
@@ -82,3 +86,4 @@ function generateRandomString($length = 10)
     }
     return $randomString;
 }
+?>

@@ -210,10 +210,10 @@ if(isset($_POST['delete_all'])) {
     </style>
 </head>
 <body>
-    <!-- Sticky Menu -->
-    <div class="sticky-menu">
+<div class="sticky-menu">
         <a id="home" href="index.php">Home</a>
-        <a id="list" class="active" href="list.php">List</a>
+        <a id="list" href="list.php">List</a>
+        <a id="pecahxml" href="pecahxml.php">pecah xml</a>
         <a id="logout" href="?logout=1">Logout</a>
     </div>
 

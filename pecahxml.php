@@ -219,6 +219,7 @@ $filesToShow = array_slice($files, $startIndex, $filesPerPage);
 <div class="sticky-menu">
         <a id="home" href="index.php">Home</a>
         <a id="list" href="list.php">List</a>
+        <a id="generatelayer2" href="generatelayer2.php">GenerateLayer2</a>
         <a id="pecahxml" href="pecahxml.php">pecah xml</a>
         <a id="logout" href="?logout=1">Logout</a>
     </div>

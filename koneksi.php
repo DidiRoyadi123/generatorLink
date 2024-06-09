@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "generatorlink";
+$servername = "sql12.freemysqlhosting.net";
+$username = "sql12712835";
+$password = "nK9j149Qm9";
+$dbname = "sql12712835";
 
 // Membuat koneksi
 $conn = new mysqli($servername, $username, $password, $dbname);

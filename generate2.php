@@ -12,17 +12,20 @@ if (isset($_POST['generate2'])) {
             $random_file = $files[array_rand($files)];
             $random_content = file_get_contents($random_file);
 
+            // Hapus isi dari semua href
+            $random_content = preg_replace('/<a\s+[^>]*?href="[^"]*"/i', '<a href=""', $random_content);
+
             // Periksa apakah isi file HTML yang dipilih memiliki tag html lengkap atau tidak
             if (strpos($random_content, '</html>') === false) {
                 // Jika tidak lengkap, lengkapi dengan tag html, head, dan body
                 $random_content = '<html><head></head><body>' . $random_content . '</body></html>';
             }
 
-
             // Mengganti href pada a dengan rel="dofollow"
             if (strpos($random_content, 'rel="dofollow"') !== false) {
-                $random_content = preg_replace('/<a\s+([^>]*?rel="dofollow"[^>]*?)href="([^"]*)"/i', '<a $1href="t.me/bokep_indonesia18"', $random_content);
+                $random_content = preg_replace('/<a\s+([^>]*?rel="dofollow"[^>]*?)href="[^"]*"/i', '<a $1href="https://tol.com"', $random_content);
             }
+
             // Memeriksa apakah string $random_content mengandung salah satu domain yang ingin diganti
             if (strpos($random_content, 'http://www.info-beasiswa.id/') !== false || strpos($random_content, 'http://www.mediabisnis.co.id/') !== false) {
                 // Mengganti domain tertentu dengan tol.com
@@ -31,11 +34,13 @@ if (isset($_POST['generate2'])) {
                         'http://www.info-beasiswa.id/',
                         'http://www.mediabisnis.co.id/'
                     ),
-                    't.me/bokep_indonesia18',
+                    'https://tol.com',
                     $random_content
                 );
             }
 
+            // Parafrase konten $random_content
+            $random_content = paraphraseContent($random_content);
 
             // Memeriksa apakah konten Layer 2 valid (misalnya, mengandung </body>)
             if (strpos($random_content, '</body>') !== false && strpos($random_content, '</html>') !== false) {
@@ -107,3 +112,179 @@ if (isset($_POST['generate2'])) {
         exit;
     }
 }
+
+// Fungsi untuk melakukan parafrase konten
+function paraphraseContent($content) {
+    // Contoh sederhana parafrase dengan mengganti beberapa kata dan struktur kalimat dalam bahasa Indonesia
+    $paraphrases = array(
+        'konten' => 'isi',
+        'file' => 'dokumen',
+        'html' => 'HTML',
+        'href' => 'referensi tautan',
+        'yang' => 'yang mana',
+        'dan' => 'serta',
+        'untuk' => 'guna',
+        'dengan' => 'dengan cara',
+        'atau' => 'ataupun',
+        'jika' => 'apabila',
+        'tidak' => 'tidaklah',
+        'ini' => 'hal ini',
+        'adalah' => 'merupakan',
+        'akan' => 'bakal',
+        'memeriksa' => 'mengecek',
+        'memilih' => 'memutuskan',
+        'salah satu' => 'satu di antara',
+        'mengganti' => 'mengubah',
+        'mengandung' => 'berisi',
+        'domain' => 'wilayah',
+        'tertentu' => 'khusus',
+        'dengan' => 'serta',
+        'konten' => 'materi',
+        'memasukkan' => 'menyisipkan',
+        'script' => 'skrip',
+        'file' => 'berkas',
+        'download' => 'unduh',
+        'perubahan' => 'modifikasi',
+        'save' => 'menyimpan',
+        'success' => 'berhasil',
+        'valid' => 'sah',
+        'alert' => 'peringatan',
+        'location' => 'lokasi',
+        'empty' => 'kosong',
+        'masukkan' => 'inputkan',
+        'generate' => 'hasilkan',
+        'button' => 'tombol',
+        'head' => 'kepala',
+        'body' => 'tubuh',
+        'header' => 'tajuk',
+        'parafrase' => 'penguraian kata',
+        'sederhana' => 'simple',
+        'mengubah' => 'mengganti',
+        'struktur' => 'susunan',
+        'kalimat' => 'ayat',
+        'bahasa' => 'language',
+        'indonesia' => 'Indonesian',
+        'dalam' => 'di dalam',
+        'serta' => 'dan juga',
+        'dari' => 'dari pada',
+        'ke' => 'ke arah',
+        'kepada' => 'kepada',
+        'pada' => 'di',
+        'baik' => 'bagus',
+        'buruk' => 'jelek',
+        'cepat' => 'laju',
+        'lambat' => 'pelan',
+        'besar' => 'luas',
+        'kecil' => 'mini',
+        'panjang' => 'lama',
+        'pendek' => 'singkat',
+        'tinggi' => 'jangkung',
+        'rendah' => 'ceper',
+        'kuat' => 'perkasa',
+        'lemah' => 'rapuh',
+        'baru' => 'segar',
+        'lama' => 'usang',
+        'mudah' => 'gampang',
+        'sulit' => 'sukar',
+        'panas' => 'gerah',
+        'dingin' => 'sejuk',
+        'terang' => 'cerah',
+        'gelap' => 'suram',
+        'sehat' => 'bugar',
+        'sakit' => 'penyakit',
+        'indah' => 'elok',
+        'buruk' => 'jelek',
+        'cantik' => 'menawan',
+        'tampan' => 'ganteng',
+        'bijak' => 'arif',
+        'bodoh' => 'dungu',
+        'senang' => 'gembira',
+        'sedih' => 'duka',
+        'kaya' => 'makmur',
+        'miskin' => 'melarat',
+        'pendidikan' => 'pengajaran',
+        'pekerjaan' => 'kerjaan',
+        'rumah' => 'kediaman',
+        'mobil' => 'kendaraan',
+        'motor' => 'sepeda motor',
+        'sepeda' => 'ontel',
+        'teman' => 'sahabat',
+        'keluarga' => 'sanak saudara',
+        'makanan' => 'pangan',
+        'minuman' => 'beverage',
+        'listrik' => 'energi',
+        'air' => 'cairan',
+        'tanah' => 'bumi',
+        'laut' => 'samudra',
+        'gunung' => 'pegunungan',
+        'hutan' => 'rimba',
+        'udara' => 'angin',
+        'langit' => 'angkasa',
+        'bintang' => 'cahaya',
+        'bulan' => 'rembulan',
+        'matahari' => 'surya',
+        'pagi' => 'fajar',
+        'siang' => 'tengah hari',
+        'sore' => 'senja',
+        'malam' => 'larut',
+        'hari' => 'waktu',
+        'minggu' => 'pekan',
+        'bulan' => 'masa',
+        'tahun' => 'periode',
+        'umur' => 'usia',
+        'hidup' => 'nyawa',
+        'mati' => 'meninggal',
+        'lahir' => 'terbit',
+        'tua' => 'lanjut usia',
+        'muda' => 'belia',
+        'anak' => 'bocah',
+        'orang' => 'manusia',
+        'pria' => 'laki-laki',
+        'wanita' => 'perempuan',
+        'suami' => 'laki',
+        'istri' => 'bini',
+        'cinta' => 'kasih',
+        'benci' => 'dendam',
+        'teman' => 'kawan',
+        'musuh' => 'lawan',
+        'bahagia' => 'senang',
+        'sedih' => 'muram',
+        'ketawa' => 'tertawa',
+        'menangis' => 'berlinang',
+        'sakit' => 'nyeri',
+        'sehat' => 'fit',
+        'makan' => 'santap',
+        'minum' => 'teguk',
+        'tidur' => 'lelap',
+        'bangun' => 'terjaga',
+        'pergi' => 'berangkat',
+        'datang' => 'tiba',
+        'pulang' => 'balik',
+        'tinggal' => 'huni',
+        'pergi' => 'berangkat',
+        'berbicara' => 'bicara',
+        'diam' => 'bungkam',
+        'melihat' => 'menonton',
+        'mendengar' => 'menyimak',
+        'bermain' => 'bermain-main',
+        'belajar' => 'menuntut ilmu',
+        'bekerja' => 'kerja',
+        'berlari' => 'berkejaran',
+        'berjalan' => 'melangkah',
+        'membaca' => 'melahap',
+        'menulis' => 'mengarang',
+        'mendengar' => 'mendengarkan',
+         'melihat' => 'memandang'
+    );
+
+    // Mengganti kata-kata dalam konten
+    foreach ($paraphrases as $original => $replacement) {
+        $content = preg_replace('/\b' . preg_quote($original, '/') . '\b/', $replacement, $content);
+    }
+
+    // Contoh sederhana mengubah struktur kalimat
+    $content = preg_replace('/(Ini adalah contoh kalimat yang)/', 'Berikut merupakan contoh kalimat yang mana', $content);
+
+    return $content;
+}
+?>
